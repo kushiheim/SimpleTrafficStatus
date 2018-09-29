@@ -10,7 +10,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Collections;
+import java.util.Enumeration;
+
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "MainActivity";
 
     private Handler mHandler = new Handler();
     private long mStartRX = 0;
@@ -25,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView network_id;
     private TextView link_speed;
     private WifiManager mWifiManager;
+    private TextView mtu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +49,19 @@ public class MainActivity extends AppCompatActivity {
                 "." + ((ipAddress >> 16) & 0xFF) + "." + ((ipAddress >> 24) & 0xFF);
         ip_address.setText(ip_addr);
         mac_address.setText(wifiInfo.getMacAddress());
-        //network_id.setText(wifiInfo.getNetworkId());
-        //link_speed.setText(wifiInfo.getLinkSpeed());
+        network_id.setText(String.valueOf(wifiInfo.getNetworkId()));
+        link_speed.setText(String.valueOf(wifiInfo.getLinkSpeed()));
 
+        // for MTU
+        try {
+            Enumeration<NetworkInterface> nets =
+                    NetworkInterface.getNetworkInterfaces();
+            for (NetworkInterface netint : Collections.list(nets)) {
+                displayInterfaceInformation(netint);
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
 
         // for RX, TX
         mStartRX = TrafficStats.getTotalRxBytes();
@@ -61,6 +78,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * https://www.java-tips.org/java-se-tips-100019/31-java-net/1767-programmatic-access-to-network-parameters.html
+     */
+    @SuppressLint("SetTextI18n")
+    private void displayInterfaceInformation(NetworkInterface netint) throws SocketException {
+        mtu.setText(mtu.getText() + "\n" +
+                            String.format("Display name : %s%n", netint.getDisplayName()) +
+                            String.format("MTU : %s%n", netint.getMTU()));
+    }
+
     private void setupViews() {
         RX = (TextView) findViewById(R.id.RX);
         TX = (TextView) findViewById(R.id.TX);
@@ -70,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         mac_address = (TextView) findViewById(R.id.mac_address);
         network_id = (TextView) findViewById(R.id.network_id);
         link_speed = (TextView) findViewById(R.id.link_speed);
+        mtu = (TextView) findViewById(R.id.mtu);
     }
 
     private final Runnable mRunnable = new Runnable() {
