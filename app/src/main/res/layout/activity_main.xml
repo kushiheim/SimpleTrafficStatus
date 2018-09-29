@@ -153,6 +153,35 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
+        android:text="Network Interface"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:typeface="monospace"/>
+
+        <TextView
+            android:id="@+id/mtu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text=""
+            android:typeface="monospace"/>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
         android:text="Traffic Stats"
         android:textSize="16sp"
         android:textStyle="bold"/>
@@ -172,7 +201,6 @@
             android:id="@+id/TX"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="2dp"
             android:text="0"
             android:typeface="monospace"/>
 
@@ -194,7 +222,6 @@
             android:id="@+id/RX"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="2dp"
             android:text="0"
             android:typeface="monospace"/>
 
